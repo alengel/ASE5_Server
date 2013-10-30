@@ -1,0 +1,35 @@
+<div class='span3'>
+</div>
+
+<div class='span6 white-panel'>
+
+	<h3>
+		Login.
+	</h3>
+	
+	<hr>		
+	
+	<div class='row-fluid'>
+		
+		<form  method='post' action='<?=HTTP.WWW_ROOT?>/login/auth'>		
+		<?php
+			if($this->err){
+				echo "<div class='alert alert-error'>{$this->err}<button type='button' class='close' data-dismiss='alert'>&times;</button></div>";
+			}
+		?>
+			<p><input type="text" name='username' required placeholder="Username … "></p>			
+			<p><input type="password" name='password' required  placeholder="Password … "></p>
+			<button type="submit" class="btn"> Log Me In <i class="icon icon-arrow-right"></i> </button>
+			<hr>
+			<a href='' class='small gray'>Forgot Password?</a>
+			<a href='' class='small blue'>Create An Account.</a>
+			
+		</form>
+		
+	</div>
+
+	<div class='span3'>
+	</div>
+
+</div>
+
