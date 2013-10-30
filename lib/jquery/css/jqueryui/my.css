@@ -1,0 +1,27 @@
+body { margin:0px; padding:0px; font-family:Arial, Helvetica, sans-serif; background:url(../images/bg_color.gif) repeat-x;  }
+p { margin:0px; padding:0px; }
+
+#main { width:100%; margin:0px; padding:0px; background:url(../images/bg1.gif) top center no-repeat; }
+#container { padding:0px; width:1000px; height:768px;  margin:0px auto; }
+
+#topmenubar { margin:0px; padding:0px; height:30px; clear:both; background:url(../images/menubar_bg.gif) no-repeat; }
+#topmenubar #logo { width:171px; height:45px; background:url(../images/logo.gif) no-repeat; float:left; display:block; margin:4px 0px 0px 12px; }
+#topmenubar #menu { float:left; margin-top:0px; clear:both;padding:0px; text-decoration:none; margin-left:0px; }
+#topmenubar #menu a { font-family: Verdana, Arial, Helvetica; font-size:12px; font-weight:normal; color:#FFF; text-decoration:none; float:left; display:block; text-decoration:none; padding:15px 10px; }
+#topmenubar #menu a:hover { text-decoration:none; color:#0CF; }
+
+#form { margin:116px 0px 0px 224px; width:552px; height:220px; }
+#form .login { font-size:16px; font-weight:bold; color:#FFF; padding-top:50px;}
+#form form { margin:0px; padding:0px; }
+#form label { margin:0px; padding:0px; display:block; float:left; margin-right:7px; margin-top:10px; }
+#form .input_text { width:190px; padding:6px 10px; font-size:16px; color:#2e5d7c; font-weight:bold; }
+#form .checkbox { margin:0px; padding:0px; font-size:13px; color:#FFF; font-weight:bold; margin-top:5px; }
+#form .button { width:88px; height:38px; background:url(../images/login_button.gif) no-repeat; }
+#form .forgot { font-size:13px; color:#6fa8ce; font-weight:bold; position:relative; float:left; top:40px; }
+#form .forgot a { text-decoration:none; color:#6fa8ce; }
+#form .forgot a:hover { text-decoration:underline; color:#0CF; }
+#form .dont { font-size:13px; color:#6fa8ce; font-weight:bold; position:relative; float:right; top:40px; }
+#form .dont a { text-decoration:none; color:#6fa8ce; }
+#form .dont a:hover { text-decoration:underline; color:#0CF; }
+
+#clear { height:0px; clear:both; line-height:0px; }
