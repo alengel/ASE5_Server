@@ -32,17 +32,25 @@ class T5_UserController extends Core_Controller{
 		$this->_checkParam('email');
 		
 		// check if user exists
-		$check = $this->users->fetchRow("email='".$_POST['email']."' and passwd='".$_POST['passwd']."'");
+		$check = $this->users->fetchRow("email='".$this->_getParam('email')."' and passwd='".$this->_getParam('passwd')."'");
 		
 		// if user found generate the key and update in DB and return same key
 		// key will always be unique even if user login next time
 		// it will be unique for all use, even if they login same time
 		if($check){
+		
+			// generate unique key
 			$key = sha1($check->email.''.time());
 			$update['login_key'] = $key;
+			$update['last_login'] = time();
+			
+			// udpate the user
 			$this->users->doUpdate($update,"id='".$check->id."'");
 			
-			$this->_send($data = array('success'=>'true','key'=>$key));
+			// get user now, so you get the new key 
+			$user = $this->users->doRead($check->id);
+			// send back data
+			$this->_send($data = array('success'=>'true','key'=>$update['login_key'],'data'=>$user->toArray()));
 		}
 		// else return false
 		else{
@@ -62,14 +70,16 @@ class T5_UserController extends Core_Controller{
 		$this->_checkParam('email');
 		
 		// check if it does exist
-		$check = $this->users->fetchRow("email='".$_POST['email']."'");
+		$check = $this->users->fetchRow("email='".$this->_getParam('email')."'");
 
 		// id it does not exists, then only register
 		// else flag for already exists
 		if(!$check){
-		
+			
+			$p = $this->getRequest()->getParams();
+			
 			// create now onlt if POST
-			if($this->users->doCreate($_POST)){
+			if($this->users->doCreate($p)){
 				$data = array('success'=>'true');
 			}
 			else{		
@@ -98,14 +108,14 @@ class T5_UserController extends Core_Controller{
 		$this->_checkParam('key');
 		
 		// find user with this key, else user not logged in
-		$check = $this->users->fetchRow("key='".$_POST['key']."'");
+		$check = $this->users->fetchRow("key='".$this->_getParam('key')."'");
 
 		// if found, means logged in
 		if($check){
 		
 			// get param for geo codes
-			$update['latitude'] = $_POST['latitude'];
-			$update['longitude'] = $_POST['longitude'];
+			$update['latitude'] = $this->_getParam('latitude');
+			$update['longitude'] = $this->_getParam('longitude');
 			$update['users_id']  = $check->id;
 			
 			// create new record for this user for the location
@@ -137,7 +147,7 @@ class T5_UserController extends Core_Controller{
 		$this->_checkParam('email');
 		
 		// email it must exists in db
-		$check = $this->users->fetchRow("email='".$_POST['email']."'");
+		$check = $this->users->fetchRow("email='".$this->_getParam('email')."'");
 
 		// if yes, send mail and return true
 		if($check){
@@ -163,20 +173,21 @@ class T5_UserController extends Core_Controller{
 		$this->_checkParam('key');
 		
 		// find user with this key
-		$check = $this->users->fetchRow("key='".$_POST['key']."'");
+		$check = $this->users->fetchRow("key='".$this->_getParam('key')."'");
 
 		// only if user is found
 		if($check){
 		
 			// get param
-			$update['storage'] 		= $_POST['storage'];
-			$update['distance'] 	= $_POST['distance'];
-			$update['interval'] 	= $_POST['interval'];
-			$update['logging_period'] = $_POST['logging_period'];
+			$update['storage'] 		= $this->_getParam('storage');
+			$update['distance'] 	= $this->_getParam('distance');
+			$update['interval'] 	= $this->_getParam('interval');
+			$update['logging_period'] = $this->_getParam('logging_period');
 			
 			// update for this user only
-			if($this->users->doUpdate($update,"key='".$_POST['key']."'")){
-				$data = array('success'=>'true');
+			if($this->users->doUpdate($update,"key='".$this->_getParam('key')."'")){
+				$user = $this->users->doRead($check->id);
+				$data = array('success'=>'true','data'=>$user->toArray());
 			}
 			else{		
 				$data = array('success'=>'false');
@@ -204,7 +215,7 @@ class T5_UserController extends Core_Controller{
 		$this->_checkParam('key');
 		
 		// get user with key
-		$check = $this->users->fetchRow("key='".$_POST['key']."'");
+		$check = $this->users->fetchRow("key='".$this->_getParam('key')."'");
 		
 		// set key empty
 		$this->users->doUpdate(array('key'=>'',"id='".$check->id."'"));
@@ -238,8 +249,12 @@ class T5_UserController extends Core_Controller{
 	 */
 	private function _checkParam($param){
 	
+		//echo $param;
+		$param = $this->_getParam($param);
+		//die;
+		
 		// common function to check param
-		if(!$_POST[$param]){
+		if(!$param){
 			$this->_send(array('success'=>'false'));
 		}
 	}
