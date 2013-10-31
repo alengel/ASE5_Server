@@ -16,6 +16,7 @@ class Core_Controller extends Zend_Controller_Action{
 	public function init($checkLogin = true){
 		
 		$this->users = new Model_DbTable_Users;
+		$this->mails = new Model_Custom_Mails;
 		
 		if($checkLogin)
 			if(!Zend_Auth::getInstance()->hasIdentity()){
