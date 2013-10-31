@@ -1,0 +1,44 @@
+@CHARSET "ISO-8859-1";
+*{margin: 0px;padding: 0px;}
+body{font-family: Tahoma,verdana;font-size: 12px;padding: 0px;margin: 0px;border: 0px solid #111;}
+.textbox_small,.textbox_medium,.textbox,.submit{border: 1px solid #989898;background-color:#fff;padding:4px;font-size: 12px;}
+.textbox{width: 250px}
+.textbox_medium{width: 130px}
+.textbox_small{width: 80px}
+.submit,.button{cursor:pointer;background-color:#37badc;color:#196db6; font-weight: normal;padding: 2px 15px 2px 15px ;color: #fff;border: 1px solid #8dd5ff;text-transform:capitalize;}
+.submit{background-color: #5bb14d;border:2px solid #d9fd7d}
+a{text-decoration: none;border: 0px;color:#496db6;}
+img{border: 0px;}
+h2{padding-bottom: 0px;padding-top: 10px;margin: 4px;font-size: 14px;}
+hr{border: 0px;border-top: 1px solid #cdcdcd;}
+table.spreadsheet{ width:98%;margin:10px 0; border:#bababa 1px solid; }
+table.spreadsheet th{border-right:1px solid #bababa; background:#dedede;color:#434343; font-weight:normal; font-size:12px; padding:2px 2px;}
+table.spreadsheet td{ border-right:1px solid #cdcdcd;border-top:#cdcdcd 1px solid; padding:3px 3px; }
+table.spreadsheet tr:hover{ background-color: #efefef; }
+.comments{color:#646464;font-size: 10px}
+/*
+############################
+Below is Zend_Form specific CSS only
+*/
+/*
+.zend_form{background:#fff;width:800px;padding:0px;border-top:1px solid #cdcdcd;overflow:auto;}
+.zend_form dt{padding:0;clear:both;width:30%;float:left;text-align:right;margin:2px;}
+.zend_form dd{padding:0;float:left;width:68%;margin: 2px;}
+.zend_form p{padding:0;margin:0;}
+.zend_form input, .zend_form textarea{padding:1px;margin:0 0 2px 0;}
+.submit{}
+*/
+
+.zend_form{background:#fff;width:600px;padding:5px;padding-left:30px;border-top:1px solid #cdcdcd;}
+.zend_form dd{margin-bottom: 10px;}
+.required:after{content:'* ';color:#cc2233;font-size:12px}
+.zend_form ul.errors li{list-style-type: none;color:#cc2211;font-size: 11px;}
+
+/* ####################### */
+.link_delete{font-size: 11px;font-weight:normal;color: #cc2211;}
+.success{margin:8px;width:500px;color:green;padding:4px;background-color: #e2edd4;border-left:2px solid green}
+.error{margin:8px;width:500px;color:red;padding:4px;background-color: #f8f0f0;border-left:2px solid #cc3322}
+.info{margin:8px;width:500px;color:#fff;padding:4px;background-color: #e6b842;border-left:2px solid #cc3322}
+.highlight{font-size: 11px;color: #979797}
+
+/*##################*/
