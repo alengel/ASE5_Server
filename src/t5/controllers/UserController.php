@@ -7,7 +7,6 @@
  */
 class T5_UserController extends Core_Controller{
 
-	
 	/**
 	 * init function.
 	 * 
@@ -16,6 +15,9 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function init(){	
 		
+		// init the default parameter from custom controller
+		// this can be extended for other stuff in future
+		// add more function call to core controller, if needed, and use after init
 		parent::init(false);
 		
 	}
@@ -28,34 +30,41 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function loginAction(){
 		
-		// check if param exists, else return false, this function can be used anywhere for param check
+		// check if its a valid post request
+		$this->_checkRequest('POST');
+		
+		// check if param exists, else return false, this function can be used anywhere 
+		// to check if the required params for this api call does exist
 		$this->_checkParam('email');
 		
-		// check if user exists
+		// check if user exists and passwd is correct
 		$check = $this->users->fetchRow("email='".$this->_getParam('email')."' and passwd='".$this->_getParam('passwd')."'");
 		
 		// if user found generate the key and update in DB and return same key
 		// key will always be unique even if user login next time
-		// it will be unique for all use, even if they login same time
+		// and key once used will never be assigned again 
+		// because we are using timestamp + email
 		if($check){
 		
 			// generate unique key
 			$key = sha1($check->email.''.time());
-			$update['login_key'] = $key;
-			$update['last_login'] = time();
+			$update['login_key'] 	= $key;
+			$update['last_login'] 	= time();
 			
 			// udpate the user
 			$this->users->doUpdate($update,"id='".$check->id."'");
 			
-			// get user now, so you get the new key 
+			// get user now, so you get the new key to through it back to json 
 			$user = $this->users->doRead($check->id);
+	
 			// send back data
 			$this->_send($data = array('success'=>'true','key'=>$update['login_key'],'data'=>$user->toArray()));
 		}
 		// else return false
 		else{
-			$this->_send($data = array('success'=>'false'));
+			$this->_send($data = array('success'=>'false','msg'=>'Invalid Email or Password'));
 		}
+		
 	}	
 	
 	/**
@@ -66,6 +75,9 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function registerAction(){
 	
+		// check if its a valid post request
+		$this->_checkRequest('POST');
+		
 		// check param email
 		$this->_checkParam('email');
 		
@@ -76,6 +88,7 @@ class T5_UserController extends Core_Controller{
 		// else flag for already exists
 		if(!$check){
 			
+			// get all parameter that are sent from app
 			$p = $this->getRequest()->getParams();
 			
 			// create now onlt if POST
@@ -104,6 +117,12 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function geoPushAction(){
 	
+		// check last login time gap
+		// if its more then the user settings, log him out
+		
+		// check if its a valid post + put request
+		$this->_checkRequest('POST_PUT');
+		
 		// check key, means user is logged in
 		$this->_checkParam('key');
 		
@@ -143,6 +162,9 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function changePasswordAction(){
 	
+		// check if its a valid post request
+		$this->_checkRequest('POST');
+		
 		// check email, must exists
 		$this->_checkParam('email');
 		
@@ -151,7 +173,18 @@ class T5_UserController extends Core_Controller{
 
 		// if yes, send mail and return true
 		if($check){
-			$data = array('success'=>'true');
+			// static call to send email
+			// it takes the user object
+			
+			// if mail is fine, send true back else false
+			if($this->mails->forgotPassword($check)){
+				// send true.
+				$data = array('success'=>'true','msg'=>'Reset link has been sent on your email.');
+			}
+			// something went wrong
+			else{
+				$data = array('success'=>'false','msg'=>'An error occurred, please try again.');
+			}
 		}
 		// else false
 		else{		
@@ -169,6 +202,9 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function settingsAction(){
 
+		// check if its a valid post request
+		$this->_checkRequest('POST');
+		
 		// key must be send
 		$this->_checkParam('key');
 		
@@ -236,7 +272,11 @@ class T5_UserController extends Core_Controller{
 		
 		// reponse is json only
 		$response = $this->getResponse();
+		
+		// set the correct header
 		$response->setHeader('Content-type', 'application/json', true);
+		
+		// send json
 		$this->_helper->json->sendJson($data);
 
 	}
@@ -257,6 +297,48 @@ class T5_UserController extends Core_Controller{
 		if(!$param){
 			$this->_send(array('success'=>'false'));
 		}
+	}
+	
+	/**
+	 * _checkRequest function.
+	 * 
+	 * @access private
+	 * @param mixed $type
+	 * @return void
+	 */
+	private function _checkRequest($type){
+		
+		// default response;
+		$response = array('success'=>'false'); 
+		
+		// check type
+		switch($type){
+			
+			// check if post
+			case "POST":
+				
+				// only post needed 
+				if($this->getRequest()->isPost()){
+					return true; 
+				}
+				break;
+			
+			case 'POST_PUT':
+				// POST + PUT needed
+				
+				// check post and then put as custom variable
+				if($this->getRequest()->isPost()){
+					if($this->_getParam('request') == 'PUT'){
+						return true;
+					}
+				}
+				
+				break;
+			
+		}
+		
+		// if nothing works send the default response
+		$this->_send($response);
 	}
 	
 }
