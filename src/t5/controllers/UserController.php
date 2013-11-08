@@ -135,6 +135,7 @@ class T5_UserController extends Core_Controller{
 			// get param for geo codes
 			$update['latitude'] = $this->_getParam('latitude');
 			$update['longitude'] = $this->_getParam('longitude');
+			$update['timestamp'] = $this->_getParam('timestamp');
 			$update['users_id']  = $check->id;
 			
 			// create new record for this user for the location
