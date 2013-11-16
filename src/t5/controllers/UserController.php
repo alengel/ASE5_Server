@@ -87,15 +87,22 @@ class T5_UserController extends Core_Controller{
 		// id it does not exists, then only register
 		// else flag for already exists
 		if(!$check){
-			
 			// get all parameter that are sent from app
 			$p = $this->getRequest()->getParams();
+			//$p['json'] = json_encode($p);
+			
+			// if image
+			if($p['profile_image']){				
+				$time = time();
+				Model_Custom_File::base64ToFile($p['profile_image'],DOC_ROOT.'/uploads/users/'.$time.'.jpg');
+				$p['profile_image'] = HTTP.WWW_ROOT.'/uploads/users/'.$time.'.jpg';
+			}
 			
 			// create now onlt if POST
 			if($this->users->doCreate($p)){
 				$data = array('success'=>'true');
 			}
-			else{		
+			else{	
 				$data = array('success'=>'false');
 			}
 		}
@@ -110,7 +117,7 @@ class T5_UserController extends Core_Controller{
 	}
 	
 	/**
-	 * geoPushAction function.
+	 * checkInAction function.
 	 * 
 	 * @access public
 	 * @return void
@@ -121,22 +128,21 @@ class T5_UserController extends Core_Controller{
 		// if its more then the user settings, log him out
 		
 		// check if its a valid post + put request
-		$this->_checkRequest('POST_PUT');
+		$this->_checkRequest('POST');
 		
 		// check key, means user is logged in
 		$this->_checkParam('key');
 		
 		// find user with this key, else user not logged in
-		$check = $this->users->fetchRow("key='".$this->_getParam('key')."'");
+		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
 
 		// if found, means logged in
 		if($check){
 		
 			// get param for geo codes
-			$update['latitude'] = $this->_getParam('latitude');
-			$update['longitude'] = $this->_getParam('longitude');
-			$update['timestamp'] = $this->_getParam('timestamp');
-			$update['users_id']  = $check->id;
+			$update['dated'] 		= $this->_getParam('timestamp');
+			$update['venue_id'] 	= $this->_getParam('venue_id');
+			$update['users_id']  	= $check->id;
 			
 			// create new record for this user for the location
 			if($this->locations->doCreate($update)){
@@ -204,13 +210,13 @@ class T5_UserController extends Core_Controller{
 	public function settingsAction(){
 
 		// check if its a valid post request
-		$this->_checkRequest('POST');
+		$this->_checkRequest('POST_PUT');
 		
 		// key must be send
 		$this->_checkParam('key');
 		
 		// find user with this key
-		$check = $this->users->fetchRow("key='".$this->_getParam('key')."'");
+		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
 
 		// only if user is found
 		if($check){
@@ -222,7 +228,7 @@ class T5_UserController extends Core_Controller{
 			$update['logging_period'] = $this->_getParam('logging_period');
 			
 			// update for this user only
-			if($this->users->doUpdate($update,"key='".$this->_getParam('key')."'")){
+			if($this->users->doUpdate($update,"login_key='".$this->_getParam('key')."'")){
 				$user = $this->users->doRead($check->id);
 				$data = array('success'=>'true','data'=>$user->toArray());
 			}
@@ -239,7 +245,112 @@ class T5_UserController extends Core_Controller{
 		$this->_send($data);
 	
 	}
+	
+	/**
+	 * checkInAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function checkInAction(){
 
+		$p = $this->getRequest()->getParams();
+		// check if its a valid post request
+		$this->_checkRequest('POST');
+		
+		// key must be send
+		$this->_checkParam('key');
+		
+		// find user with this key
+		$check = $this->users->fetchRow("login_key='".$this->_getParam['key']."'");
+
+		// only if user is found
+		if($check){
+		
+			// check if already exists
+			$checkVenue = $this->locations->fetchRow("foursquare_venue_id='".$p['venue_id']."'");
+			if($checkVenue){
+				$insertReview['locations_id'] = $checkVenue->id;
+			}
+			else{
+				$insertLocation['foursquare_venue_id'] 		= $p['venue_id'];
+				$insertLocation['foursquare_venue_name'] 	= $p['venue_name'];
+				$insertReview['locations_id'] = $this->locations->doCreate($insertLocation);
+			}
+			
+			// if image
+			if($p['location_image']){				
+				$time = time();
+				Model_Custom_File::base64ToFile($p['location_image'],DOC_ROOT.'/uploads/locations/'.$time.'.jpg');
+				$insertReview['location_image'] = HTTP.WWW_ROOT.'/uploads/locations/'.$time.'.jpg';
+			}
+			
+			// get param
+			$insertReview['users_id'] 		= $check->id;
+			$insertReview['rating'] 		= $p['rating'];
+			$insertReview['review_title'] 	= $p['review'];
+			
+			if($this->users_reviews->doCreate($insertReview)){
+				$data = array('success'=>'true');
+			}
+			else{		
+				$data = array('success'=>'false');
+			}
+		}
+		// not logged in
+		else{
+			$data = array('success'=>'false','error'=>'Cannot check in. Try again.');
+		}
+		
+		// send json
+		$this->_send($data);
+	
+	}
+
+	/**
+	 * getByVenueAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function getByVenueAction(){
+		
+		// check if its a valid post request
+		//$this->_checkRequest('GET');
+		
+		// key must be send
+		//$this->_checkParam('key');
+		
+		// find user with this key
+		//$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
+		
+		$checkVenue = $this->locations->fetchRow("foursquare_venue_id='".$this->_getParam('venue_id')."'");
+			
+		// if not found
+		if(!$checkVenue){
+			$data = array('success'=>'false');
+		}
+		else{
+			$data = $this->users_reviews->doquery("
+				select 
+					first_name,last_name,email,rating,review_title review
+				from
+					t5_users_reviews ur,t5_locations l,t5_users u
+				where
+					ur.locations_id='".$checkVenue->id."'
+					and
+					ur.locations_id = l.id
+					and
+					ur.users_id=u.id
+			");
+			$data = array('success'=>'true','data'=>$data->fetchAll());
+			
+		}
+		
+		$this->_send($data);
+			
+	}
+	
 	/**
 	 * logoutAction function.
 	 * 
@@ -252,10 +363,10 @@ class T5_UserController extends Core_Controller{
 		$this->_checkParam('key');
 		
 		// get user with key
-		$check = $this->users->fetchRow("key='".$this->_getParam('key')."'");
+		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
 		
 		// set key empty
-		$this->users->doUpdate(array('key'=>'',"id='".$check->id."'"));
+		$this->users->doUpdate(array('key'=>''),"id='".$check->id."'");
 		
 		// send data back , in all cases, TRUE
 		$data = array('success'=>'true');
@@ -341,5 +452,7 @@ class T5_UserController extends Core_Controller{
 		// if nothing works send the default response
 		$this->_send($response);
 	}
+	
+	
 	
 }

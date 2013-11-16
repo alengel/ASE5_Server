@@ -3,7 +3,7 @@
 /**
  * Model_DbTable_Locations class.
  * 
- * @extends Model_DbTable_Base
+ * @extends Core_Db
  */
 class Model_DbTable_Locations extends Core_Db{
 

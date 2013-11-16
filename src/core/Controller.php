@@ -16,6 +16,8 @@ class Core_Controller extends Zend_Controller_Action{
 	public function init($checkLogin = true){
 		
 		$this->users = new Model_DbTable_Users;
+		$this->locations = new Model_DbTable_Locations;
+		$this->users_reviews = new Model_DbTable_Users_Reviews;
 		$this->mails = new Model_Custom_Mails;
 		
 		if($checkLogin)

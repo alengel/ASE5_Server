@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Model_DbTable_User class.
+ * Model_DbTable_Users class.
  * 
- * @extends Model_DbTable_Base
+ * @extends Core_Db
  */
 class Model_DbTable_Users extends Core_Db{
 
