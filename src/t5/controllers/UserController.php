@@ -358,7 +358,7 @@ class T5_UserController extends Core_Controller{
 		//$this->_checkRequest('GET');
 		
 		// key must be send
-		$this->_checkParam('key');
+		//$this->_checkParam('key');
 		
 		// find user with this key
 		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
@@ -367,6 +367,7 @@ class T5_UserController extends Core_Controller{
 			
 		// if not found
 		if(!$checkVenue){
+			//die;
 			$data = array('success'=>'false');
 		}
 		else{
