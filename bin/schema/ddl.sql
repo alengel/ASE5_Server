@@ -52,21 +52,6 @@ create table t5_users_reviews(
 
 )engine=innodb;
 
-create table t5_users_reviews_comments(
-	
-	id int(11) auto_increment,
-	users_id int(11)
-	users_reviews_id int(11),
-	comment text,
-		
-	dated varchar(20),
-	primary key(id),
-    foreign key (users_id) references t5_users(id) on update cascade on delete cascade,
-	foreign key (users_reviews_id) references t5_users_reviews(id) on update cascade on delete cascade
-
-)engine=innodb;
-
-
 create table t5_users_votes(
 
 	id int(11) auto_increment,

@@ -17,18 +17,6 @@ class Model_DbTable_Users extends Core_Db{
 	 */
 	protected $_name = 't5_users';
 
-	/**
-	 * checkKey function.
-	 * 
-	 * @access public
-	 * @param mixed $key
-	 * @return void
-	 */
-	public function checkKey($key){
-		
-		// get user with key
-		return $this->fetchRow("login_key='".$key."'");
-		
-	}	
+	
 	
 }

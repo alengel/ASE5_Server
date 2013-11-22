@@ -345,73 +345,6 @@ class T5_UserController extends Core_Controller{
 		$this->_send($data);
 	
 	}
-	
-	
-	/**
-	 * voteAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function voteAction(){
-
-		$p = $this->getRequest()->getParams();
-		
-		// check if its a valid post request
-		$this->_checkRequest('POST');
-		
-		// key must be send
-		$this->_checkParam('key');
-		
-		// find user with this key
-		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
-
-		// only if user is found
-		if($check){
-		
-			// check review
-			$review = $this->users_reviews->doRead($p['review_id']);
-			
-			// if review exists
-			if($review){
-				// check vote flag
-				if($p['vote']){
-					$updateReview['total_vote_up'] = $review->total_vote_up + 1;
-				}
-				else{
-					$updateReview['total_vote_down'] = $review->total_vote_down +  1;
-				}
-				
-				// update for this user only
-				if($this->users_reviews->doUpdate($updateReview,"id='".$p['review_id']."'")){
-					
-					$checkUserVote = $this->users_votes->fetchRow("users_id='".$check->id."' and users_reviews_id='".$p['review_id']."' ");
-			
-					// only if not already given.
-					if(!$checkUserVote){
-						// update for this user
-						$insertVotes['vote_flag'] = $p['vote'];
-						$insertVotes['users_id'] = $check->id;
-						
-						$this->users_votes->update($insertVotes);
-						$data = array('success'=>'true');
-					}
-				}
-				else{		
-					$data = array('success'=>'false','error'=>'Review deleted');
-				}
-			}
-		}
-		// not logged in
-		else{
-			$data = array('success'=>'false','error'=>'You are not logged in.');
-		}
-		
-		// send json
-		$this->_send($data);
-	
-	}
-	
 
 	/**
 	 * venueAction function.
@@ -421,18 +354,16 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function venueAction(){
 		
-		$p = $this->getRequest()->getParams();
-		
 		// check if its a valid post request
-		$this->_checkRequest('GET');
+		//$this->_checkRequest('GET');
 		
 		// key must be send
-		/$this->_checkParam('key');
+		//$this->_checkParam('key');
 		
 		// find user with this key
-		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
 		
-		$checkVenue = $this->locations->fetchRow("foursquare_venue_id='".$p['venue_id']."'");
+		$checkVenue = $this->locations->fetchRow("foursquare_venue_id='".$this->_getParam('venue_id')."'");
 			
 		// if not found
 		if(!$checkVenue){
@@ -442,7 +373,7 @@ class T5_UserController extends Core_Controller{
 		else{
 			$data = $this->users_reviews->doquery("
 				select 
-					first_name,profile_image,last_name,email,rating,review_title review
+					first_name,last_name,email,rating,review_title review
 				from
 					t5_users_reviews ur,t5_locations l,t5_users u
 				where
@@ -461,34 +392,6 @@ class T5_UserController extends Core_Controller{
 	}
 	
 	/**
-	 * putCommentsAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function putCommentsAction(){
-		
-		$p = $this->getRequest()->getParams();
-		
-		// check post
-		$this->_checkRequest('POST');
-		
-		// check key
-		$this->_checkParam('key');
-		
-		// check key else exit
-		if($user = $this->users->checkKey($p['key'])){
-			
-			
-		}
-		else{
-			$this->_send(array("success"=>"false","error"=>"Invalid Login Key"));
-		}
-		
-		
-	}
-	
-	/**
 	 * logoutAction function.
 	 * 
 	 * @access public
@@ -496,14 +399,11 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function logoutAction(){
 	
-		//get all params
-		$p = $this->getRequest()->getParams();
-		
 		// logout user, but key should be there
 		$this->_checkParam('key');
 		
 		// get user with key
-		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
 		
 		// set key empty
 		$this->users->doUpdate(array('key'=>''),"id='".$check->id."'");
