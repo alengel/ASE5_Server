@@ -15,7 +15,7 @@ ini_set('error_reporting',E_ALL-E_NOTICE);
 // WARNING :  If using IIS, make sure HTTP_HOST is properly set.
 
 define("APP_NAME","ASET5");
-define ('WWW_ROOT',$_SERVER['HTTP_HOST']."/eclipse/ASE5_Server"); 
+define ('WWW_ROOT',$_SERVER['HTTP_HOST']."/sandbox/projectpackets"); 
 
 // define zend framework in use, this is also the zend library directory name
 // simply change this when upgrading zend framework
@@ -52,7 +52,7 @@ define('HTTPS','https://');
 
 // define path to application directory
 defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/src'));
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/_src'));
 
 
 // set models path.
@@ -75,7 +75,7 @@ require_once 'Zend/Application.php';
 
 $application = new Zend_Application(
     APPLICATION_ENV, 
-    APPLICATION_PATH . '/../src/cfg/application.ini'
+    APPLICATION_PATH . '/../_src/cfg/application.ini'
 );
 
 
