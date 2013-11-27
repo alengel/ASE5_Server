@@ -87,6 +87,10 @@ class T5_UserController extends Core_Controller{
 		// id it does not exists, then only register
 		// else flag for already exists
 		if(!$check){
+<<<<<<< HEAD
+=======
+			
+>>>>>>> d0ee01d684781a2ac139deb58989c19f2b43954a
 			// get all parameter that are sent from app
 			$p = $this->getRequest()->getParams();
 			//$p['json'] = json_encode($p);
@@ -128,7 +132,11 @@ class T5_UserController extends Core_Controller{
 		// if its more then the user settings, log him out
 		
 		// check if its a valid post + put request
+<<<<<<< HEAD
 		$this->_checkRequest('POST');
+=======
+		$this->_checkRequest('POST_PUT');
+>>>>>>> d0ee01d684781a2ac139deb58989c19f2b43954a
 		
 		// check key, means user is logged in
 		$this->_checkParam('key');
@@ -249,7 +257,11 @@ class T5_UserController extends Core_Controller{
 	public function settingsAction(){
 
 		// check if its a valid post request
+<<<<<<< HEAD
 		$this->_checkRequest('POST_PUT');
+=======
+		$this->_checkRequest('POST');
+>>>>>>> d0ee01d684781a2ac139deb58989c19f2b43954a
 		
 		// key must be send
 		$this->_checkParam('key');
@@ -604,6 +616,9 @@ class T5_UserController extends Core_Controller{
 		$this->_send($response);
 	}
 	
+<<<<<<< HEAD
 	
 	
+=======
+>>>>>>> d0ee01d684781a2ac139deb58989c19f2b43954a
 }
