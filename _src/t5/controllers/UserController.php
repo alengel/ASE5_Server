@@ -492,7 +492,26 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function followAction(){
 
-		$this->_send(array("success"=>"true"));
+		$p = $this->getRequest()->getParams();
+		
+		// key must be send
+		$this->_checkParam('key');
+		
+		// find user with this key
+		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		
+		if($check){
+			
+			$insert['my_id'] = $check->id;
+			$insert['friends_id'] = $p['users_id'];
+			//$insert['status'] = self::
+			$data = $this->connections->fetchAll("friends_id='".$check->id."'");		
+			$this->_send(array("success"=>"false","followings"=>$data->toArray()));	
+		}
+		else{
+			$this->_send(array("success"=>"false"));	
+		}
+
 	
 	}
 	
@@ -516,8 +535,24 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function getFollowingsAction(){
 
-		$this->_send(array("success"=>"true"));
-	
+		$p = $this->getRequest()->getParams();
+		
+		// key must be send
+		$this->_checkParam('key');
+		
+		// find user with this key
+		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		
+		if($check){
+			
+			$data = $this->connections->fetchAll("friends_id='".$check->id."'");		
+			$this->_send(array("success"=>"false","followings"=>$data->toArray()));	
+		}
+		else{
+			$this->_send(array("success"=>"false"));	
+		}
+
+		
 	}
 	
 	/**
@@ -528,7 +563,22 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function getFollowersAction(){
 		
-		$this->_send(array("success"=>"true"));
+		$p = $this->getRequest()->getParams();
+		
+		// key must be send
+		$this->_checkParam('key');
+		
+		// find user with this key
+		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		
+		if($check){
+			
+			$data = $this->connections->fetchAll("my_id='".$check->id."'");		
+			$this->_send(array("success"=>"false","followings"=>$data->toArray()));	
+		}
+		else{
+			$this->_send(array("success"=>"false"));	
+		}
 	}
 	/**
 	 * voteAction function.
