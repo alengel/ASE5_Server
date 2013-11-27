@@ -509,6 +509,28 @@ class T5_UserController extends Core_Controller{
 	
 	
 	/**
+	 * followAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function getFollowingsAction(){
+
+		$this->_send(array("success"=>"true"));
+	
+	}
+	
+	/**
+	 * unfollowAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function getFollowersAction(){
+		
+		$this->_send(array("success"=>"true"));
+	}
+	/**
 	 * voteAction function.
 	 * 
 	 * @access public
