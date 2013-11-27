@@ -86,32 +86,6 @@ create table t5_users_votes(
 )engine=innodb;
 
 
-create table t5_reviews_spams(
-
-	id int(11) auto_increment,
-	users_id int(11),
-	spam_id int(11),
-	dated varchar(20),
-	
-	primary key(id),
-	unique key(users_id,spam_id),
-    foreign key (spam_id) references t5_users_review(id) on update cascade on delete cascade,
-		
-)engine=innodb;
-
-create table t5_users_spams(
-
-	id int(11) auto_increment,
-	users_id int(11),
-	spam_id int(11),
-	dated varchar(20),
-	
-	primary key(id),
-	unique key(users_id,spam_id),
-    foreign key (spam_id) references t5_users_review(id) on update cascade on delete cascade,
-		
-)engine=innodb;
-
 create table t5_checkins(
 
     id int(11) auto_increment,
@@ -126,18 +100,6 @@ create table t5_checkins(
 
 )engine=innodb;
 
-create table t5_phonebook(
-	
-	id int(11) auto_increment,
-	users_id int(11),
-	email varchar(200),
-	phone varchar(200),
-	
-	dated varchar(20),
-	primary key(id),
-    foreign key (users_id) references t5_users(id) on update cascade on delete cascade,
-	
-)engine=innodb;
 
 create table t5_connections(
 

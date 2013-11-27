@@ -5,17 +5,17 @@
  * 
  * @extends Core_Db
  */
-class Model_DbTable_Locations extends Core_Db{
+class Model_DbTable_Connections extends Core_Db{
 
 	/**
 	 * _name
 	 * 
-	 * (default value: 't5_locations')
+	 * (default value: 't5_connections')
 	 * 
 	 * @var string
 	 * @access protected
 	 */
-	protected $_name = 't5_locations';
+	protected $_name = 't5_connections';
 
 	
 	

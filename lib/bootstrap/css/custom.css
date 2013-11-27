@@ -3,7 +3,7 @@ body{
    	font-size: 16px;
    	color: #333;
    	line-height: 24px;
-
+   	background-image: url("../../../bg/2.png");
 }
 hr{
 	margin-top: 20px;
@@ -34,8 +34,7 @@ h2{
 }
 h1{
 	font-size: 50px;
-	font-family: 'Bevan', cursive;
- 	line-height: 60px;
+	line-height: 60px;
    	color: #777;
    	font-weight: 200;
 }
@@ -45,13 +44,12 @@ h1{
 }
 
 .brand{
-	font-weight: 200;
+	font-weight: 40;
 	font-size: 20px;
 	display: block;
 	padding: 20px;
    	color: #005580;
 	margin-bottom: 40px;
-	font-family: 'Bevan', cursive;
 }
 .brand a:hover{
 	color:#005580;

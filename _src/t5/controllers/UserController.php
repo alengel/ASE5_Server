@@ -117,6 +117,63 @@ class T5_UserController extends Core_Controller{
 	}
 	
 	/**
+	 * profileAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function profileAction(){
+	
+		$p = $this->getRequest()->getParams();
+		
+		// check key, means user is logged in
+		$this->_checkParam('key');
+		
+		// find user with this key, else user not logged in
+		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		
+		// get follwing
+		$following = $this->connections->fetchAll("my_id='".$check->id."'");
+		
+		// if exist
+		if($check){
+			$this->_send(array("success"=>"true","data"=>$check->toArray(),"following"=>$following->toArray()));
+		}
+		else{
+			$this->_send(array("success"=>"false"));
+		}
+	}
+
+	/**
+	 * profileAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function updateAction(){
+	
+		$p = $this->getRequest()->getParams();
+		
+		// check key, means user is logged in
+		$this->_checkParam('key');
+		
+		// find user with this key, else user not logged in
+		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		
+		// if exist
+		if($check){
+			
+			$this->users->doUpdate($p,"id='".$check->id."'");
+			$this->_send(array("success"=>"true"));
+
+		}
+		else{
+			$this->_send(array("success"=>"false"));
+		}
+
+	}
+	
+	/**
 	 * checkInAction function.
 	 * 
 	 * @access public
@@ -200,6 +257,30 @@ class T5_UserController extends Core_Controller{
 		
 		$this->_send($data);
 	}
+	
+	/**
+	 * setPasswordAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function setPasswordAction(){
+	
+		//$this->_helper->layout()->setLayout('t5');
+		$p = $this->getRequest()->getParams();
+		$user = $this->users->fetchRow("sha1(id)='".$p['x']."'");
+		
+		// if posted
+		if($this->getRequest()->isPost()){
+			
+			$this->users->doUpdate($p,"id='".$user->id."'");
+			$this->view->msg = 'Password reset complete.';
+		} 
+		
+		
+	}
+	
+	
 	/**
 	 * changePasswordAction function.
 	 * 
@@ -404,6 +485,30 @@ class T5_UserController extends Core_Controller{
 	
 	
 	/**
+	 * followAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function followAction(){
+
+		$this->_send(array("success"=>"true"));
+	
+	}
+	
+	/**
+	 * unfollowAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function unfollowAction(){
+		
+		$this->_send(array("success"=>"true"));
+	}
+	
+	
+	/**
 	 * voteAction function.
 	 * 
 	 * @access public
@@ -534,6 +639,34 @@ class T5_UserController extends Core_Controller{
 		
 		// check post
 		$this->_checkRequest('POST');
+		
+		// check key
+		$this->_checkParam('key');
+		
+		// check key else exit
+		if($user = $this->users->checkKey($p['key'])){
+			
+			
+		}
+		else{
+			$this->_send(array("success"=>"false","error"=>"Invalid Login Key"));
+		}
+		
+		
+	}
+	
+	/**
+	 * getCommentsAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function getCommentsAction(){
+	
+		$p = $this->getRequest()->getParams();
+		
+		// check post
+		//$this->_checkRequest('POST');
 		
 		// check key
 		$this->_checkParam('key');
