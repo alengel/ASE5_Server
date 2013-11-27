@@ -389,7 +389,7 @@ class T5_UserController extends Core_Controller{
 		if($check){
 		
 			$reviewer = $this->users->doquery(
-				"select first_name,last_name,email,profile_image from t5_users where id='".$p['reviewer_id']."'"
+				"select id as users_id,first_name,last_name,email,profile_image from t5_users where id='".$p['reviewer_id']."'"
 			);
 			
 			$data = $this->users_reviews->doquery("
@@ -505,8 +505,8 @@ class T5_UserController extends Core_Controller{
 			$insert['my_id'] = $check->id;
 			$insert['friends_id'] = $p['users_id'];
 			//$insert['status'] = self::
-			$data = $this->connections->fetchAll("friends_id='".$check->id."'");		
-			$this->_send(array("success"=>"false","followings"=>$data->toArray()));	
+			$data = $this->connections->doInsert($insert);		
+			$this->_send(array("success"=>"true"));	
 		}
 		else{
 			$this->_send(array("success"=>"false"));	
@@ -523,7 +523,23 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function unfollowAction(){
 		
-		$this->_send(array("success"=>"true"));
+		$p = $this->getRequest()->getParams();
+		
+		// key must be send
+		$this->_checkParam('key');
+		
+		// find user with this key
+		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		
+		if($check){
+			
+			$data = $this->connections->delete("friend_id='".$check->id."' and my_id='".$p['users_id']."'");		
+			$this->_send(array("success"=>"true"));	
+		}
+		else{
+			$this->_send(array("success"=>"false"));	
+		}
+
 	}
 	
 	
@@ -546,7 +562,7 @@ class T5_UserController extends Core_Controller{
 		if($check){
 			
 			$data = $this->connections->fetchAll("friends_id='".$check->id."'");		
-			$this->_send(array("success"=>"false","followings"=>$data->toArray()));	
+			$this->_send(array("success"=>"true","followings"=>$data->toArray()));	
 		}
 		else{
 			$this->_send(array("success"=>"false"));	
@@ -574,7 +590,7 @@ class T5_UserController extends Core_Controller{
 		if($check){
 			
 			$data = $this->connections->fetchAll("my_id='".$check->id."'");		
-			$this->_send(array("success"=>"false","followings"=>$data->toArray()));	
+			$this->_send(array("success"=>"true","followings"=>$data->toArray()));	
 		}
 		else{
 			$this->_send(array("success"=>"false"));	
