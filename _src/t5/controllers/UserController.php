@@ -20,6 +20,9 @@ class T5_UserController extends Core_Controller{
 		// add more function call to core controller, if needed, and use after init
 		parent::init(false);
 		
+		$this->_helper->layout()->disablelayout();
+		
+		
 	}
 	
 	/**
@@ -505,7 +508,7 @@ class T5_UserController extends Core_Controller{
 			$insert['my_id'] = $check->id;
 			$insert['friends_id'] = $p['users_id'];
 			//$insert['status'] = self::
-			$data = $this->connections->doInsert($insert);		
+			$data = $this->connections->doCreate($insert);		
 			$this->_send(array("success"=>"true"));	
 		}
 		else{
@@ -647,8 +650,12 @@ class T5_UserController extends Core_Controller{
 					}
 				}
 				else{		
-					$data = array('success'=>'false','error'=>'Review deleted');
+					$data = array('success'=>'false');
 				}
+			}
+			else{
+				$data = array('success'=>'false','error'=>'Review deleted');
+			
 			}
 		}
 		// not logged in
@@ -693,7 +700,7 @@ class T5_UserController extends Core_Controller{
 			
 			$data = $this->users_reviews->doquery("
 				select 
-					first_name,profile_image,last_name,email,rating,review_title review,
+					u.id as id,ur.id as review_id,first_name,profile_image,last_name,email,rating,review_title review,
 					review_picture location_image,ur.total_vote_up - ur.total_vote_down as total_vote
 				from
 					t5_users_reviews ur,t5_locations l,t5_users u
