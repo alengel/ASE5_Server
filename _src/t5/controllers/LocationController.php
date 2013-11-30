@@ -159,7 +159,13 @@ class T5_UserController extends Core_Controller{
 		// check key else exit
 		if($user = $this->users->checkKey($p['key'])){
 			
+			// set insert params for comments
+			$insert['comments'] 	= $p['comments'];
+			$insert['users_id'] 	= $user->id;
+			$insert['reviews_id'] 	= $p['reviews_id'];
 			
+			// insert into db
+			$this->users_reviews_comments->doCreate($insert);
 		}
 		else{
 			$this->_send(array("success"=>"false","error"=>"Invalid Login Key"));
@@ -176,10 +182,11 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function getCommentsAction(){
 	
+		// get all params
 		$p = $this->getRequest()->getParams();
 		
 		// check post
-		//$this->_checkRequest('POST');
+		$this->_checkRequest('POST');
 		
 		// check key
 		$this->_checkParam('key');
@@ -187,7 +194,9 @@ class T5_UserController extends Core_Controller{
 		// check key else exit
 		if($user = $this->users->checkKey($p['key'])){
 			
-			
+			// get all comments for the reviews
+			$data - $this->users_reviews_comments->fetchAll("reviews_id='".$p['reviews_id']."'");
+			$this->_send(array('success'=>'true','data'=$data->toArray()));
 		}
 		else{
 			$this->_send(array("success"=>"false","error"=>"Invalid Login Key"));
