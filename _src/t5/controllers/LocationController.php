@@ -77,6 +77,7 @@ class T5_UserController extends Core_Controller{
 		$this->_send($data);
 	}
 	
+
 	/**
 	 * reviewsAction function.
 	 * 
