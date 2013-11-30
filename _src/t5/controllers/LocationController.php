@@ -177,6 +177,51 @@ class T5_UserController extends Core_Controller{
 	}
 	
 	/**
+	 * checkInAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function checkInAction(){
+	
+		// check last login time gap
+		// if its more then the user settings, log him out
+		
+		// check if its a valid post + put request
+		$this->_checkRequest('POST');
+		
+		// check key, means user is logged in
+		$this->_checkParam('key');
+		
+		// find user with this key, else user not logged in
+		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
+
+		// if found, means logged in
+		if($check){
+		
+			// get param for geo codes
+			$update['dated'] 		= $this->_getParam('timestamp');
+			$update['venue_id'] 	= $this->_getParam('venue_id');
+			$update['users_id']  	= $check->id;
+			
+			// create new record for this user for the location
+			if($this->locations->doCreate($update)){
+				$data = array('success'=>'true');
+			}
+			else{		
+				$data = array('success'=>'false');
+			}
+		}
+		// else not logged in
+		else{
+			$data = array('success'=>'false','error'=>'An Error Occurred. You are logged out.');
+		}
+		
+		// send json
+		$this->_send($data);
+	}
+	
+	/**
 	 * resetPasswordAction function.
 	 * 
 	 * @access public
