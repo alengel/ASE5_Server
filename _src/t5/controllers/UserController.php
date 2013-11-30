@@ -577,7 +577,7 @@ class T5_UserController extends Core_Controller{
 		if($check){
 			
 			// find users who checkin in at almost same hour
-			$data = $this->checkins->fetchAll("users_id='".$check->id."' and dated='".($p['timestamp']/1000)."'");
+			$data = $this->checkins->fetchAll("users_id='".$check->id."' and dated='".($p['timestamp']/3600)."'");
 			// send those list of users
 			if($data){
 				$this->_send(array("success"=>"true","data"=>$data->toArray()));	
