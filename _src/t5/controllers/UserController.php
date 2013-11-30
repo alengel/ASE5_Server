@@ -23,7 +23,7 @@ class T5_UserController extends Core_Controller{
 		$this->_helper->layout()->disablelayout();
 	
 		// check last login gap and return of gap exceeded more the login sesson
-		// common for all calls
+		// common for all calls.
 		$p = $this->geRequest()->getParams();
 		// if request delayed logout!
 		if(!$this->users->checkLastLoginTimeout($p['key']){

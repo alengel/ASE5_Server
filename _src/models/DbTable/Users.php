@@ -26,7 +26,7 @@ class Model_DbTable_Users extends Core_Db{
 	 */
 	public function checkKey($key){
 		
-		// get user with key
+		// return the user based on key
 		return $this->fetchRow("login_key='".$key."'");
 		
 	}	
