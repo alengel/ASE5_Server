@@ -31,4 +31,29 @@ class Model_DbTable_Users extends Core_Db{
 		
 	}	
 	
+	/**
+	 * checkLastLoginTimeout function.
+	 * 
+	 * @access public
+	 * @param mixed $key
+	 * @return void
+	 */
+	public function checkLastLoginTimeout($key){
+		
+		// get user
+		$user = $this->fetchRow("login_key='".$key."'");
+		
+		// request came within the valid session
+		if(($user->logout_session_time * 60) > (time() - $this->last_request) ){
+			
+			$update['last_request'] = time();
+			$this->doUpdate($update);
+			return true;
+			
+		}
+		else{
+			return false;
+		}
+	
+	}
 }

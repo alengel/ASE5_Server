@@ -20,9 +20,18 @@ class T5_UserController extends Core_Controller{
 		// add more function call to core controller, if needed, and use after init
 		parent::init(false);
 		
+		// disable master layout
+		// all return are json unless explicitly layout declared
 		$this->_helper->layout()->disablelayout();
 		
-		
+		// check last login gap and return of gap exceeded more the login sesson
+		// common for all calls
+		$p = $this->geRequest()->getParams();
+		// if request delayed logout!
+		if(!$this->users->checkLastLoginTimeout($p['key']){
+			$this->_send(array("success"=>"false","error"=>"session expired"));		
+		}
+		 
 	}
 	
 	
@@ -34,9 +43,6 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function checkInAction(){
 	
-		// check last login time gap
-		// if its more then the user settings, log him out
-		
 		// check if its a valid post + put request
 		$this->_checkRequest('POST');
 		
