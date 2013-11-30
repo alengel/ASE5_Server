@@ -256,6 +256,7 @@ class T5_UserController extends Core_Controller{
 	public function changePasswordAction(){
 	
 		// check if its a valid post request
+		// its a POST+PUT request
 		$this->_checkRequest('POST_PUT');
 		
 		// key must be send
@@ -269,7 +270,9 @@ class T5_UserController extends Core_Controller{
 		
 			// get param
 			$update['passwd'] 		= $this->_getParam('passwd');
+			
 			// update for this user only
+			// passord must be in sha1
 			if($this->users->doUpdate($update,"login_key='".$this->_getParam('key')."'")){
 				$user = $this->users->doRead($check->id);
 				$data = array('success'=>'true');
