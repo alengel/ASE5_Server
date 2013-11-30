@@ -77,6 +77,68 @@ class T5_UserController extends Core_Controller{
 		$this->_send($data);
 	}
 	
+	/**
+	 * reviewsAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function reviewsAction(){
+
+		// get all params
+		$p = $this->getRequest()->getParams();
+		
+		// check if its a valid post request
+		$this->_checkRequest('GET');
+		
+		// key must be send
+		$this->_checkParam('key');
+		
+		// find user with this key
+		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
+
+		// only if user is found
+		if($check){
+		
+			// get all user of this review
+			$reviewer = $this->users->doquery(
+				"select id as users_id,first_name,last_name,email,profile_image from t5_users where id='".$p['reviewer_id']."'"
+			);
+			
+			// get all users who posted reviews for this venue
+			$data = $this->users_reviews->doquery("
+				select 
+					rating,review_title review,
+					l.foursquare_venue_name location_name, review_picture location_image
+				from
+					t5_users_reviews ur,t5_locations l,t5_users u
+				where
+					ur.users_id='".$p['reviewer_id']."'
+					and
+					ur.locations_id = l.id
+					and
+					ur.users_id=u.id
+			");
+			
+			// build the return param
+			$data = array(
+				"success"=>"true",
+				"profile"=>$reviewer->fetchAll(),
+				"details"=>$data->fetchAll()
+			);
+
+		}
+		// not logged in
+		else{
+			$data = array('success'=>'false','error'=>'You are not logged in.');
+		}
+		
+		// send json
+		$this->_send($data);
+	
+	}
+	
+
 	
 	/**
 	 * _sendAction function.
