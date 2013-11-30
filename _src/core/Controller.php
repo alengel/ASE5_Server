@@ -19,6 +19,7 @@ class Core_Controller extends Zend_Controller_Action{
 		$this->locations = new Model_DbTable_Locations;
 		$this->connections = new Model_DbTable_Connections;
 		$this->users_reviews = new Model_DbTable_Users_Reviews;
+		$this->users_votes = new Model_DbTable_Users_Votes;
 		$this->mails = new Model_Custom_Mails;
 		
 		if($checkLogin)
