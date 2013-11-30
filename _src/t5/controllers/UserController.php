@@ -599,76 +599,8 @@ class T5_UserController extends Core_Controller{
 			$this->_send(array("success"=>"false"));	
 		}
 	}
-	/**
-	 * voteAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function voteAction(){
-
-		$p = $this->getRequest()->getParams();
-		
-		// check if its a valid post request
-		$this->_checkRequest('POST');
-		
-		// key must be send
-		$this->_checkParam('key');
-		
-		// find user with this key
-		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
-
-		// only if user is found
-		if($check){
-		
-			// check review
-			$review = $this->users_reviews->doRead($p['review_id']);
-			
-			// if review exists
-			if($review){
-				// check vote flag
-				if($p['vote']){
-					$updateReview['total_vote_up'] = $review->total_vote_up + 1;
-				}
-				else{
-					$updateReview['total_vote_down'] = $review->total_vote_down +  1;
-				}
-				
-				// update for this user only
-				if($this->users_reviews->doUpdate($updateReview,"id='".$p['review_id']."'")){
-					
-					$checkUserVote = $this->users_votes->fetchRow("users_id='".$check->id."' and users_reviews_id='".$p['review_id']."' ");
-			
-					// only if not already given.
-					if(!$checkUserVote){
-						// update for this user
-						$insertVotes['vote_flag'] = $p['vote'];
-						$insertVotes['users_id'] = $check->id;
-						
-						$this->users_votes->update($insertVotes);
-						$data = array('success'=>'true','total_up'=>$review->total_vote_u + 1);
-					}
-				}
-				else{		
-					$data = array('success'=>'false');
-				}
-			}
-			else{
-				$data = array('success'=>'false','error'=>'Review deleted');
-			
-			}
-		}
-		// not logged in
-		else{
-			$data = array('success'=>'false','error'=>'You are not logged in.');
-		}
-		
-		// send json
-		$this->_send($data);
 	
-	}
 	
-
 	/**
 	 * venueAction function.
 	 * 
