@@ -500,61 +500,6 @@ class T5_UserController extends Core_Controller{
 			
 	}
 	
-	/**
-	 * putCommentsAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function putCommentsAction(){
-		
-		$p = $this->getRequest()->getParams();
-		
-		// check post
-		$this->_checkRequest('POST');
-		
-		// check key
-		$this->_checkParam('key');
-		
-		// check key else exit
-		if($user = $this->users->checkKey($p['key'])){
-			
-			
-		}
-		else{
-			$this->_send(array("success"=>"false","error"=>"Invalid Login Key"));
-		}
-		
-		
-	}
-	
-	/**
-	 * getCommentsAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function getCommentsAction(){
-	
-		$p = $this->getRequest()->getParams();
-		
-		// check post
-		//$this->_checkRequest('POST');
-		
-		// check key
-		$this->_checkParam('key');
-		
-		// check key else exit
-		if($user = $this->users->checkKey($p['key'])){
-			
-			
-		}
-		else{
-			$this->_send(array("success"=>"false","error"=>"Invalid Login Key"));
-		}
-		
-		
-	}
 	
 	/**
 	 * logoutAction function.
