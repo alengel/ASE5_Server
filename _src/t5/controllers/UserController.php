@@ -400,6 +400,7 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function getFollowingsAction(){
 
+		// get all params
 		$p = $this->getRequest()->getParams();
 		
 		// key must be send
@@ -408,6 +409,7 @@ class T5_UserController extends Core_Controller{
 		// find user with this key
 		$check = $this->users->fetchRow("login_key='".$p['key']."'");
 		
+		// only if user exists
 		if($check){
 			
 			$data = $this->connections->fetchAll("friends_id='".$check->id."'");		
@@ -428,14 +430,16 @@ class T5_UserController extends Core_Controller{
 	 */
 	public function getFollowersAction(){
 		
+		// get all params
 		$p = $this->getRequest()->getParams();
 		
-		// key must be send
+		// key must be there from the app
 		$this->_checkParam('key');
 		
 		// find user with this key
 		$check = $this->users->fetchRow("login_key='".$p['key']."'");
 		
+		// do if user exists
 		if($check){
 			
 			$data = $this->connections->fetchAll("my_id='".$check->id."'");		
@@ -458,10 +462,10 @@ class T5_UserController extends Core_Controller{
 		$p = $this->getRequest()->getParams();
 		
 		// check if its a valid post request
-		//$this->_checkRequest('GET');
+		$this->_checkRequest('GET');
 		
 		// key must be send
-		//$this->_checkParam('key');
+		$this->_checkParam('key');
 		
 		// find user with this key
 		$check = $this->users->fetchRow("login_key='".$p['key']."'");
@@ -500,61 +504,6 @@ class T5_UserController extends Core_Controller{
 			
 	}
 	
-	/**
-	 * putCommentsAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function putCommentsAction(){
-		
-		$p = $this->getRequest()->getParams();
-		
-		// check post
-		$this->_checkRequest('POST');
-		
-		// check key
-		$this->_checkParam('key');
-		
-		// check key else exit
-		if($user = $this->users->checkKey($p['key'])){
-			
-			
-		}
-		else{
-			$this->_send(array("success"=>"false","error"=>"Invalid Login Key"));
-		}
-		
-		
-	}
-	
-	/**
-	 * getCommentsAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function getCommentsAction(){
-	
-		$p = $this->getRequest()->getParams();
-		
-		// check post
-		//$this->_checkRequest('POST');
-		
-		// check key
-		$this->_checkParam('key');
-		
-		// check key else exit
-		if($user = $this->users->checkKey($p['key'])){
-			
-			
-		}
-		else{
-			$this->_send(array("success"=>"false","error"=>"Invalid Login Key"));
-		}
-		
-		
-	}
 	
 	/**
 	 * logoutAction function.
