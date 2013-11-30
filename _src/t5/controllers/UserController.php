@@ -522,11 +522,12 @@ class T5_UserController extends Core_Controller{
 		// get user with key
 		$check = $this->users->fetchRow("login_key='".$p['key']."'");
 		
-		// set key empty
+		// for logout must set the key empty in db
 		$this->users->doUpdate(array('key'=>''),"id='".$check->id."'");
 		
 		// send data back , in all cases, TRUE
 		$data = array('success'=>'true');
+		// alwayss end true to logout even if server down after this call.
 		$this->_send($data);
 	
 	}
