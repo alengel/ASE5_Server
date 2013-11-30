@@ -21,7 +21,15 @@ class T5_UserController extends Core_Controller{
 		parent::init(false);
 		
 		$this->_helper->layout()->disablelayout();
-		
+	
+		// check last login gap and return of gap exceeded more the login sesson
+		// common for all calls.
+		$p = $this->geRequest()->getParams();
+		// if request delayed logout!
+		if(!$this->users->checkLastLoginTimeout($p['key']){
+			$this->_send(array("success"=>"false","error"=>"session expired"));		
+		}
+
 		
 	}
 	
@@ -79,7 +87,7 @@ class T5_UserController extends Core_Controller{
 	public function registerAction(){
 	
 		// check if its a valid post request
-		$this->_checkRequest('POST');
+		//$this->_checkRequest('POST');
 		
 		// check param email
 		$this->_checkParam('email');
@@ -174,51 +182,6 @@ class T5_UserController extends Core_Controller{
 			$this->_send(array("success"=>"false"));
 		}
 
-	}
-	
-	/**
-	 * checkInAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function checkInAction(){
-	
-		// check last login time gap
-		// if its more then the user settings, log him out
-		
-		// check if its a valid post + put request
-		$this->_checkRequest('POST');
-		
-		// check key, means user is logged in
-		$this->_checkParam('key');
-		
-		// find user with this key, else user not logged in
-		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
-
-		// if found, means logged in
-		if($check){
-		
-			// get param for geo codes
-			$update['dated'] 		= $this->_getParam('timestamp');
-			$update['venue_id'] 	= $this->_getParam('venue_id');
-			$update['users_id']  	= $check->id;
-			
-			// create new record for this user for the location
-			if($this->locations->doCreate($update)){
-				$data = array('success'=>'true');
-			}
-			else{		
-				$data = array('success'=>'false');
-			}
-		}
-		// else not logged in
-		else{
-			$data = array('success'=>'false','error'=>'An Error Occurred. You are logged out.');
-		}
-		
-		// send json
-		$this->_send($data);
 	}
 	
 	/**
@@ -362,123 +325,6 @@ class T5_UserController extends Core_Controller{
 		// not logged in
 		else{
 			$data = array('success'=>'false','error'=>'You are not logged in.');
-		}
-		
-		// send json
-		$this->_send($data);
-	
-	}
-	
-	/**
-	 * reviewerProfileAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function reviewerProfileAction(){
-
-		$p = $this->getRequest()->getParams();
-		
-		// check if its a valid post request
-		//$this->_checkRequest('POST_PUT');
-		
-		// key must be send
-		$this->_checkParam('key');
-		
-		// find user with this key
-		$check = $this->users->fetchRow("login_key='".$this->_getParam('key')."'");
-
-		// only if user is found
-		if($check){
-		
-			$reviewer = $this->users->doquery(
-				"select id as users_id,first_name,last_name,email,profile_image from t5_users where id='".$p['reviewer_id']."'"
-			);
-			
-			$data = $this->users_reviews->doquery("
-				select 
-					rating,review_title review,
-					l.foursquare_venue_name location_name, review_picture location_image
-				from
-					t5_users_reviews ur,t5_locations l,t5_users u
-				where
-					ur.users_id='".$p['reviewer_id']."'
-					and
-					ur.locations_id = l.id
-					and
-					ur.users_id=u.id
-			");
-			$data = array(
-				"success"=>"true",
-				"profile"=>$reviewer->fetchAll(),
-				"details"=>$data->fetchAll()
-			);
-
-		}
-		// not logged in
-		else{
-			$data = array('success'=>'false','error'=>'You are not logged in.');
-		}
-		
-		// send json
-		$this->_send($data);
-	
-	}
-	
-	/**
-	 * checkInAction function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function reviewAction(){
-
-		$p = $this->getRequest()->getParams();
-		// check if its a valid post request
-		$this->_checkRequest('POST');
-		
-		// key must be send
-		$this->_checkParam('key');
-		
-		// find user with this key
-		$check = $this->users->fetchRow("login_key='".$p['key']."'");
-
-		// only if user is found
-		if($check){
-		
-			// check if already exists
-			$checkVenue = $this->locations->fetchRow("foursquare_venue_id='".$p['venue_id']."'");
-			if($checkVenue){
-				$insertReview['locations_id'] = $checkVenue->id;
-			}
-			else{
-				$insertLocation['foursquare_venue_id'] 		= $p['venue_id'];
-				$insertLocation['foursquare_venue_name'] 	= $p['venue_name'];
-				$insertReview['locations_id'] = $this->locations->doCreate($insertLocation);
-			}
-			
-			// if image
-			if($p['location_image']){				
-				$time = time();
-				Model_Custom_File::base64ToFile($p['location_image'],DOC_ROOT.'/uploads/locations/'.$time.'.jpg');
-				$insertReview['location_image'] = HTTP.WWW_ROOT.'/uploads/locations/'.$time.'.jpg';
-			}
-			
-			// get param
-			$insertReview['users_id'] 		= $check->id;
-			$insertReview['rating'] 		= $p['rating'];
-			$insertReview['review_title'] 	= $p['review'];
-			
-			if($this->users_reviews->doCreate($insertReview)){
-				$data = array('success'=>'true');
-			}
-			else{		
-				$data = array('success'=>'false');
-			}
-		}
-		// not logged in
-		else{
-			$data = array('success'=>'false','error'=>'Cannot check in. Try again.');
 		}
 		
 		// send json
