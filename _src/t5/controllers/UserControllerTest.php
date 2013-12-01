@@ -247,6 +247,43 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 		
 	}
 
+	/**
+	 * testValidChangePasswordApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidChangePasswordApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/change-password');
+		
+		// route to same path
+		$this->assertRoute('/user/change-password');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('change-password');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('passwd');
+		$this->assertQueryContentContains('key','passwd');
+		
+	}
+
 
 
  	
