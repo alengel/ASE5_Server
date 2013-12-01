@@ -506,5 +506,79 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 		
 	}
 
+	/**
+	 * testValidPutCommentsApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidPutCommentsApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/put-comments');
+		
+		// route to same path
+		$this->assertRoute('/user/put-comments');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('put-comments');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('review_id');
+		$this->assertQueryContentContains('key','review_id');
+		
+	}
+
+	/**
+	 * testValidGetCommentsApiGetCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidGetCommentsApiGetCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('GET')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/get-comments');
+		
+		// route to same path
+		$this->assertRoute('/user/get-comments');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('get-comments');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('review_id');
+		$this->assertQueryContentContains('key','review_id');
+		
+	}
+
 	
 }
