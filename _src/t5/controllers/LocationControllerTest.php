@@ -54,5 +54,43 @@ class T5_LocationControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 	}
 	
  	
+	/**
+	 * testValidCheckinApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidCheckinApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/checkin');
+		
+		// route to same path
+		$this->assertRoute('/user/checkin');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('login');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('venue_id');
+		$this->assertQueryContentContains('key','venue_id');
+		
+	}
+ 	
 	
 }
