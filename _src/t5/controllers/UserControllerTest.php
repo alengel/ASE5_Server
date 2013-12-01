@@ -397,5 +397,77 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 		
 	}
 
+	/**
+	 * testValidFollowingApiGetCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidFollowingApiGetCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('GET')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/get-followings');
+		
+		// route to same path
+		$this->assertRoute('/user/get-followings');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('get-followings');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQueryContentContains('key');
+		
+	}
+
+	/**
+	 * testValidFollowerApiGetCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidFollowerApiGetCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('GET')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/get-follower');
+		
+		// route to same path
+		$this->assertRoute('/user/get-followers');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('get-followers');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQueryContentContains('key');
+		
+	}
+
 	
 }
