@@ -580,5 +580,42 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 		
 	}
 
+	/**
+	 * testValidFindUsersApiGetCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidFindUsersApiGetCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('GET')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/find-users');
+		
+		// route to same path
+		$this->assertRoute('/user/find-users');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('find-users');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('timestamp');
+		$this->assertQueryContentContains('key','timestamp');
+		
+	}
+
 	
 }
