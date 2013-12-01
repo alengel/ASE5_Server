@@ -133,5 +133,41 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 	}
 
  	
+ 	/**
+	 * testValidProfileApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidProfileApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/profile');
+		
+		// route to same path
+		$this->assertRoute('/user/profile');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('profile');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQueryContentContains('key');
+		
+	}
  	
 }
