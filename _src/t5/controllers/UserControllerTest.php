@@ -92,4 +92,46 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 	}
  	
  	
+ 	/**
+	 * testValidRegisterApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidRegisterApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/register');
+		
+		// route to same path
+		$this->assertRoute('/user/register');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('register');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		
+		// queries assertion check
+		$this->assertQuery('email');
+		$this->assertQuery('first_name');
+		$this->assertQuery('last_name');
+		$this->assertQuery('passwd');
+		$this->assertQueryContentContains('email','passwd','first_name','last_name');
+		
+	}
+
+ 	
+ 	
 }
