@@ -71,19 +71,18 @@ class T5_LocationControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 		$this->request->setMethod('POST')->setPost(array());
 		
 		// dispatch method to calls
-		$this->dispatch('/user/checkin');
+		$this->dispatch('/location/checkin');
 		
 		// route to same path
-		$this->assertRoute('/user/checkin');
+		$this->assertRoute('/location/checkin');
 		// module name to test
 		$this->assertModule('t5');
 		// controller to check
-		$this->assertController('user');
+		$this->assertController('location');
 		// action to check
 		$this->assertAction('login');
 		// do not redirect
 		$this->assertNotRedirect();
-		
 		
 		// queries assertion check
 		$this->assertQuery('key');
@@ -92,5 +91,43 @@ class T5_LocationControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 		
 	}
  	
+ 	
+	/**
+	 * testValidReviewsApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidReviewsApiPostCall(){
 	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/location/reviews');
+		
+		// route to same path
+		$this->assertRoute('/location/checkin');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('location');
+		// action to check
+		$this->assertAction('login');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('reviewer_id');
+		$this->assertQueryContentContains('key','reviewer_id');
+		
+	}
+ 	
+		
 }
