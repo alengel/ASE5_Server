@@ -509,6 +509,43 @@ class T5_UserController extends Core_Controller{
 	
 	
 	/**
+	 * findUserAction function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function findUserAction(){
+		
+		// get all params
+		$p = $this->getRequest()->getParams();
+		
+		// key must be send by app, check if exists
+		$this->_checkParam('key');
+		
+		// find user with this key
+		$check = $this->users->fetchRow("login_key='".$p['key']."'");
+		
+		// if user exists, find other user for same location
+		if($check){
+			
+			// find users who checkin in at almost same hour
+			$data = $this->checkins->fetchAll("users_id='".$check->id."' and dated='".($p['timestamp']/3600)."'");
+			// send those list of users
+			if($data){
+				$this->_send(array("success"=>"true","data"=>$data->toArray()));	
+			}
+			// even if noone found send true always
+			else{
+				$this->_send(array("success"=>"true"));
+			}
+		}
+		else{
+			$this->_send(array("success"=>"false"));	
+		}
+
+	}
+	
+	/**
 	 * logoutAction function.
 	 * 
 	 * @access public
