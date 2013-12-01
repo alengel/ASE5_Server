@@ -323,7 +323,79 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 		
 	}
 
+	/**
+	 * testValidFollowApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidFollowApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/follow');
+		
+		// route to same path
+		$this->assertRoute('/user/follow');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('follow');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('users_id');
+		$this->assertQueryContentContains('key','users_id');
+		
+	}
 
+	/**
+	 * testValidUnfollowApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidUnfollowApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/unfollow');
+		
+		// route to same path
+		$this->assertRoute('/user/unfollow');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('unfollow');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('users_id');
+		$this->assertQueryContentContains('key','users_id');
+		
+	}
 
- 	
+	
 }
