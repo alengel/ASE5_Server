@@ -285,6 +285,45 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 	}
 
 
+	/**
+	 * testValidSettingsApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidSettingsApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/settings');
+		
+		// route to same path
+		$this->assertRoute('/user/settings');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('settings');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		// queries assertion check
+		$this->assertQuery('key');
+		$this->assertQuery('login_interval');
+		$this->assertQuery('distance');
+		$this->assertQueryContentContains('key','login_interwal','distance');
+		
+	}
+
+
 
  	
 }
