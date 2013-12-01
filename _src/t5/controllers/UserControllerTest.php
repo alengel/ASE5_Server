@@ -52,4 +52,44 @@ class T5_UserControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 		// return mock connection
 		return $this->_connectionMock;
 	}
+	
+	/**
+	 * testValidLoginApiPostCall function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function testValidLoginApiPostCall(){
+	
+		// reset both request and response
+		$this->resetRequest()->resetResponse();
+		
+		// Set headers, even:
+        $this->request->setHeader('X-Requested-With', 'XmlHttpRequest');
+ 		// its a POST method 
+		$this->request->setMethod('POST')->setPost(array());
+		
+		// dispatch method to calls
+		$this->dispatch('/user/login');
+		
+		// route to same path
+		$this->assertRoute('/user/login');
+		// module name to test
+		$this->assertModule('t5');
+		// controller to check
+		$this->assertController('user');
+		// action to check
+		$this->assertAction('login');
+		// do not redirect
+		$this->assertNotRedirect();
+		
+		
+		// queries assertion check
+		$this->assertQuery('email');
+		$this->assertQuery('passwd');
+		$this->assertQueryContentContains('email','passwd');
+		
+	}
+ 	
+ 	
 }
