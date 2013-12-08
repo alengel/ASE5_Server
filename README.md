@@ -1,4 +1,6 @@
-ASE5_Server
-===========
+ASE Team 5 Server
+====
 
-Server Logic for ASE5
+This is the repository for the Advanced Software Engineering module at University of Sussex, 2013/2014.
+
+This repository contains the PHP server codebase for the application PinMe.
