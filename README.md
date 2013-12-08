@@ -1,4 +1,4 @@
-ASE Team 5 Server
+ASE Team 5 PHP Server
 ====
 
 This is the repository for the Advanced Software Engineering module at University of Sussex, 2013/2014.
